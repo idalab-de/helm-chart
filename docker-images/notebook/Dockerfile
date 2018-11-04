@@ -2,8 +2,8 @@
 FROM jupyter/base-notebook:4417b81d04b7
 
 USER root
-RUN apt-get update \
-  && apt-get install \
+RUN apt-get update && \
+    apt-get install \
     -yq \
     --no-install-recommends \
     libfuse-dev \
@@ -14,11 +14,12 @@ RUN apt-get update \
     graphviz \
     man \
     tree \
-    build-essential
-    
-    
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    build-essential \
+
+
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 USER $NB_USER
 
 RUN conda install --yes \
@@ -83,6 +84,7 @@ RUN pip install fusepy \
                 xesmf \
                 nbserverproxy==0.8.1 \
                 git+https://github.com/xgcm/xgcm \
+                pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
