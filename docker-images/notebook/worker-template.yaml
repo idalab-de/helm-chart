@@ -11,7 +11,7 @@ spec:
       - 6GB
       - --death-timeout
       - '60'
-    image: idalab/hub_user_notebook:latest
+    image: idalab/hub_user_notebook:0.1.1
     name: dask-worker
     securityContext:
       capabilities:
