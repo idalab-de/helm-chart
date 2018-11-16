@@ -97,7 +97,7 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
                                  jupyter-leaflet\
                                  @jupyterlab/git
 
-RUN pip install -e git+https://github.com/jupyterlab/jupyterlab-git.git#egg=jupyterlab_git
+RUN pip install jupyterlab-git
 
 
 RUN jupyter serverextension enable --py nbserverproxy \
