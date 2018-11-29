@@ -30,21 +30,21 @@ RUN conda install --yes \
     -c bokeh/channel/dev \
     -c intake \
     -c conda-forge \
-    bokeh=0.12.16 \
+    bokeh=1.0.1 \
     bqplot \
     cython \
     cytoolz \
-    dask=0.18.2 \
+    dask=0.20.2 \
     dask-ml \
     datashader \
-    distributed=1.22.1 \
+    distributed=1.24.2 \
     esmpy \
     fastparquet \
     gcsfs=0.1.2 \
     ipywidgets \
     ipyleaflet \
     jupyter \
-    jupyterlab=0.34.2 \
+    jupyterlab=0.35.4 \
     jupyterlab_launcher=0.13.1 \
     jupyter_client \
     holoviews \
@@ -81,8 +81,8 @@ RUN pip install --upgrade pip
 RUN pip install fusepy \
                 click \
                 jedi \
-                kubernetes==6.0.0 \
-                dask-kubernetes==0.4.0 \
+                kubernetes==8.0.0 \
+                dask-kubernetes==0.6.0 \
                 xesmf \
                 nbserverproxy==0.8.1 \
                 git+https://github.com/xgcm/xgcm \
