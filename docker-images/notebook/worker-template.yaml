@@ -11,7 +11,7 @@ spec:
       - 6GB
       - --death-timeout
       - '60'
-    image: idalab/hub_user:1.1.7
+    image: idalab/hub_worker:0.0.2
     name: dask-worker
     securityContext:
       capabilities:

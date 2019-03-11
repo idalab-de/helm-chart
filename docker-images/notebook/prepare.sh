@@ -6,7 +6,7 @@ echo "Copy files from pre-load directory into home"
 cp --update -r -v /pre-home/. /home/jovyan
 
 if [ -z "$EXAMPLES_GIT_URL" ]; then
-    export EXAMPLES_GIT_URL=https://github.com/pangeo-data/pangeo-example-notebooks
+    export EXAMPLES_GIT_URL=https://github.com/idalab-de/pangeo-example-notebooks
 fi
 rmdir examples &> /dev/null # deletes directory if empty, in favour of fresh clone
 if [ ! -d "examples" ]; then
@@ -46,17 +46,20 @@ if [ "$GCSFUSE_BUCKET" ]; then
 fi
 # Run extra commands
 
-export PYSPARK_PYTHON=python3
-export PYSPARK_DRIVER_PYTHON=python3
-export SPARK_PUBLIC_DNS=hub.idalab.de${JUPYTERHUB_SERVICE_PREFIX}proxy/4040/jobs/
-export SPARK_OPTS="--deploy-mode=client \
---master=k8s://https://kubernetes.default.svc \
---conf spark.driver.host=`hostname -I` \
---conf spark.driver.pod.name=${HOSTNAME} \
---conf spark.kubernetes.container.image=idalab/spark-py:spark \
---conf spark.ui.proxyBase=${JUPYTERHUB_SERVICE_PREFIX}proxy/4040 \
---conf spark.executor.instances=2 \
---driver-java-options=-Xms1024M \
---driver-java-options=-Xmx4096M \
---driver-java-options=-Dlog4j.logLevel=info"
+# export PYSPARK_PYTHON=python3
+# export PYSPARK_DRIVER_PYTHON=python3
+# export SPARK_PUBLIC_DNS=hub.idalab.de${JUPYTERHUB_SERVICE_PREFIX}proxy/4040/jobs/
+# export SPARK_OPTS="--deploy-mode=client \
+# --master=k8s://https://kubernetes.default.svc \
+# --conf spark.driver.host=`hostname -I` \
+# --conf spark.driver.pod.name=${HOSTNAME} \
+# --conf spark.kubernetes.container.image=idalab/spark-py:spark \
+# --conf spark.ui.proxyBase=${JUPYTERHUB_SERVICE_PREFIX}proxy/4040 \
+# --conf spark.executor.instances=2 \
+# --driver-java-options=-Xms1024M \
+# --driver-java-options=-Xmx4096M \
+# --driver-java-options=-Dlog4j.logLevel=info"
+
+chmod 400 ~/.ssh/id_rsa
+
 $@
