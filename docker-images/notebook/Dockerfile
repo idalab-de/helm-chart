@@ -1,4 +1,4 @@
-FROM idalab/hub_worker:0.0.1
+FROM idalab/hub_worker:0.0.4
 
 USER root
 RUN apt-get update && \
@@ -27,7 +27,9 @@ RUN conda install --yes \
     -c conda-forge \
     -c anaconda \
     jupyterlab=0.35.4 \
-    jupyterlab_launcher=0.13.1 \
+    # jupyterlab_launcher=0.13.1 \
+    jupyterlab_server \
+    alembic \
     # pyspark=2.4.0 \
 
     && conda clean -tipsy
@@ -75,4 +77,4 @@ RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
 RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CONDA_DIR/bin\"#" /etc/sudoers
 
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
-CMD ["start.sh jupyter lab"]
+# CMD ["start.sh jupyter lab"]

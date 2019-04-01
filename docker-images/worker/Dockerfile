@@ -21,11 +21,12 @@ RUN conda install --yes \
     -c bokeh/channel/dev \
     -c intake \
     -c conda-forge \
+    xgboost \
     bokeh \
     bqplot \
     cython \
     cytoolz \
-    dask=1.1.1 \
+    dask \
     dask-ml \
     datashader \
     distributed\
@@ -35,6 +36,8 @@ RUN conda install --yes \
     ipywidgets \
     ipyleaflet \
     jupyter \
+    # beautifulsoup4 \
+    # spacy \
     # jupyterlab=0.35.4 \
     # jupyterlab_launcher=0.13.1 \
     jupyter_client \
@@ -57,7 +60,7 @@ RUN conda install --yes \
     scikit-image \
     scikit-learn \
     toolz\
-    tornado \
+    tornado=5.1.1 \
     xarray\
     zarr\
     zict \
