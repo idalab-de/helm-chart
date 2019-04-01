@@ -11,7 +11,8 @@ spec:
       - 6GB
       - --death-timeout
       - '60'
-    image: pangeo/notebook:ede11f6
+    image: idalab/hub_worker:0.0.4
+    # image: idalab/hub_worker_nlp:0.0.4 ## Use this if you want to use the nlp version
     name: dask-worker
     securityContext:
       capabilities:
@@ -27,3 +28,8 @@ spec:
       requests:
         cpu: "1.75"
         memory: 6G
+  tolerations:
+    - key: "hub.jupyter.org/dedicated"
+      operator: "Equal"
+      value: "worker"
+      effect: "NoSchedule"
