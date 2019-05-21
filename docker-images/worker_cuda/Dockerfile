@@ -20,6 +20,7 @@ RUN conda install --yes \
     -c bokeh/channel/dev \
     -c intake \
     -c conda-forge \
+    # -c pytorch
     xgboost \
     bokeh \
     bqplot \
@@ -53,7 +54,7 @@ RUN conda install --yes \
     numpy \
     pandas\
     python-blosc \
-    pytorch \
+    # pytorch \
     pyzmq \
     s3fs \
     scipy \
