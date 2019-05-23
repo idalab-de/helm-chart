@@ -1,4 +1,4 @@
-FROM idalab/base-notebook-cuda:0.0.1
+FROM idalab/base-notebook-cuda:0.0.2
 
 USER root
 RUN apt-get update && \

@@ -1,4 +1,4 @@
-FROM idalab/hub_worker_cuda:0.0.1
+FROM idalab/hub_worker_cuda:0.0.2
 
 USER root
 RUN apt-get update && \
