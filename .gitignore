@@ -114,3 +114,6 @@ scheduler.json
 # Helm stuff
 */charts
 requirements.lock
+
+# OS X
+.DS_Store
