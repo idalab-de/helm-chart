@@ -9,7 +9,6 @@ RUN apt-get update && \
     fuse \
     git \
     graphviz \
-    r-base \
 
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

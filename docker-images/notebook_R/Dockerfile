@@ -1,4 +1,4 @@
-FROM idalab/hub_worker_r:0.0.5
+FROM idalab/hub_worker_r:0.0.6
 
 USER root
 RUN apt-get update && \
