@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:4417b81d04b7
+FROM jupyter/base-notebook:lab-1.0.4
 
 USER root
 RUN apt-get update && \
@@ -9,7 +9,6 @@ RUN apt-get update && \
     fuse \
     git \
     graphviz \
-
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -49,6 +48,7 @@ RUN conda install --yes \
     nb_conda_kernels \
     netcdf4>1.4 \
     nomkl \
+    notebook \
     numba \
     numcodecs \
     numpy \
@@ -78,6 +78,8 @@ RUN pip install fusepy \
                 kubernetes\
                 dask-kubernetes \
                 xesmf \
+                dask_labextension \
+                jupyterlab_sql \
                 git+https://github.com/xgcm/xgcm \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed

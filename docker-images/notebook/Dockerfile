@@ -1,4 +1,4 @@
-FROM idalab/hub_worker:0.0.4
+FROM idalab/hub_worker_david:lab-1.0.4
 
 USER root
 RUN apt-get update && \
@@ -13,7 +13,6 @@ RUN apt-get update && \
     openssh-server \
     build-essential \
     bash-completion \
-
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,12 +25,11 @@ RUN conda install --yes \
     -c intake \
     -c conda-forge \
     -c anaconda \
-    jupyterlab=0.35.4 \
+    jupyterlab=1.0.4 \
     # jupyterlab_launcher=0.13.1 \
     jupyterlab_server \
     alembic \
     # pyspark=2.4.0 \
-
     && conda clean -tipsy
 
 RUN pip install --upgrade pip
@@ -54,6 +52,7 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
                                         jupyterlab_git \
+                                        jupyterlab_sql \
                                         --sys-prefix
 
 
