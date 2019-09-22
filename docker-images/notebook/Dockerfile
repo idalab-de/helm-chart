@@ -35,6 +35,7 @@ RUN conda install --yes \
 RUN pip install --upgrade pip
 
 RUN pip install pipenv \
+                jupyterlab_latex \
                 nbserverproxy \
                 jupyterlab-git \
                 --upgrade --no-cache-dir \
@@ -47,7 +48,12 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
                                  jupyter-leaflet \
                                  @jupyterlab/git \
                                  jupyterlab-drawio \
-                                 dask-labextension
+                                 dask-labextension \
+                                 @jupyter-widgets/jupyterlab-manager@1.0 \
+                                 plotlywidget@1.1.1 \
+                                 jupyterlab-plotly@1.1.2 \
+                                 jupyterlab-chart-editor@1.2
+
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
