@@ -68,7 +68,8 @@ RUN conda install --yes \
     graphviz \
     python-graphviz \
     gsw \
-    && conda clean -tipsy
+    psycopg2 \
+    && conda clean --all -f -y
 
 RUN pip install --upgrade pip
 

@@ -1,4 +1,4 @@
-FROM idalab/hub_worker_david:lab-1.0.4
+FROM idalab/hub_worker:lab-1.0.4
 
 USER root
 RUN apt-get update && \
