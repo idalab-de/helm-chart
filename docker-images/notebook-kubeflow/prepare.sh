@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
 set -x
 
 echo "Copy files from pre-load directory into home"
-cp -r -v /pre-home /home/$NB_USER
+cp -r -v /pre-home/. /home/$NB_USER
 
 if [ -z "$EXAMPLES_GIT_URL" ]; then
     export EXAMPLES_GIT_URL=https://github.com/idalab-de/pangeo-example-notebooks

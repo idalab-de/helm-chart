@@ -8,6 +8,8 @@ RUN apt-get update && \
     htop \
     nano \
     git-extras \
+    zsh \
+    less \
     vim \
     man \
     tree \
@@ -59,6 +61,7 @@ RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab_sql \
                                         --sys-prefix
 
+
 USER root
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
@@ -68,11 +71,14 @@ ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 COPY config.yaml /pre-home
 COPY worker-template.yaml /pre-home
 COPY .condarc /pre-home
-COPY .bashrc /pre-home
 
 RUN mkdir /gcs && chown -R $NB_USER /gcs
 RUN mkdir /opt/app
 RUN /usr/bin/prepare.sh
+
+RUN conda config --set auto_activate_base false
+RUN chsh -s $(which zsh) $NB_USER
+RUN chsh -s $(which zsh) root
 
 # Add NB_USER to sudo
 RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
@@ -80,8 +86,10 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 
 # Configure container startup
 USER $NB_USER
-RUN conda init bash
-RUN conda config --set auto_activate_base false
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+COPY .zshrc /home/$NB_USER
+RUN conda init zsh
+
 EXPOSE 8888
 ENV NB_PREFIX /
-CMD ["/bin/bash", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
+CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
