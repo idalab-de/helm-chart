@@ -7,6 +7,7 @@ RUN apt-get update && \
     --no-install-recommends \
     htop \
     nano \
+    git-extras \
     vim \
     man \
     tree \
@@ -25,12 +26,9 @@ RUN conda install --yes \
     -c intake \
     -c conda-forge \
     -c anaconda \
-    jupyterlab=1.0.4 \
-    # jupyterlab_launcher=0.13.1 \
     jupyterlab_server \
     alembic \
-    # pyspark=2.4.0 \
-    && conda clean -tipsy
+    && conda clean --all -f -y
 
 RUN pip install --upgrade pip
 
@@ -43,17 +41,17 @@ RUN pip install pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager \
-                                 @jupyterlab/hub-extension \
-                                 @pyviz/jupyterlab_pyviz \
-                                 jupyter-leaflet \
+RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
+
+RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
-                                 jupyterlab-drawio \
-                                 dask-labextension \
-                                 @jupyter-widgets/jupyterlab-manager@1.0 \
-                                 plotlywidget@1.1.1 \
-                                 jupyterlab-plotly@1.1.2 \
-                                 jupyterlab-chart-editor@1.2
+                                 dask-labextension
+
+RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
+    && cd jupyterlab-kubeflow-kale \
+    && jlpm install \
+    && jlpm run build \
+    && jupyter labextension install .
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
@@ -74,7 +72,6 @@ COPY .bashrc /pre-home
 
 RUN mkdir /gcs && chown -R $NB_USER /gcs
 RUN mkdir /opt/app
-
 RUN /usr/bin/prepare.sh
 
 # Add NB_USER to sudo
@@ -82,6 +79,9 @@ RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
 RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CONDA_DIR/bin\"#" /etc/sudoers
 
 # Configure container startup
+USER $NB_USER
+RUN conda init bash
+RUN conda config --set auto_activate_base false
 EXPOSE 8888
 ENV NB_PREFIX /
-CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
+CMD ["/bin/bash", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
