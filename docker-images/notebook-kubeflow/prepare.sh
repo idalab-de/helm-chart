@@ -65,6 +65,6 @@ conda config --set auto_activate_base false
 # --driver-java-options=-Xmx4096M \
 # --driver-java-options=-Dlog4j.logLevel=info"
 
-# chmod 400 ~/.ssh/id_rsa
+chmod 400 ~/.ssh/id_rsa
 
 $@
