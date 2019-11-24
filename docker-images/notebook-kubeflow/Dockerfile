@@ -76,7 +76,6 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 
 # Configure container startup
 USER $NB_USER
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 EXPOSE 8888
 ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV SHELL /usr/bin/zsh

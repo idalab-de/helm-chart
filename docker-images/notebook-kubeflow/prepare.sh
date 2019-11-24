@@ -6,7 +6,7 @@ echo "Copy config files into home"
 if [ -z "$USER_CONFIG_URL" ]; then
     export USER_CONFIG_URL=https://github.com/idalab-de/user-config
 fi
-
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone $USER_CONFIG_URL user-config
 cd user-config
 cp .condarc /home/$NB_USER
