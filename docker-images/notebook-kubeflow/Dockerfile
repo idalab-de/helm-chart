@@ -7,6 +7,9 @@ RUN apt-get update && \
     --no-install-recommends \
     htop \
     nano \
+    git-extras \
+    zsh \
+    less \
     vim \
     man \
     tree \
@@ -27,7 +30,11 @@ RUN conda install --yes \
     -c anaconda \
     jupyterlab_server \
     alembic \
+<<<<<<< HEAD
     && conda clean -tipsy
+=======
+    && conda clean --all -f -y
+>>>>>>> cd2876080fcb2b99e558295e4946da35c47aee8d
 
 RUN pip install --upgrade pip
 
@@ -41,23 +48,37 @@ RUN pip install pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
+<<<<<<< HEAD
 RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop               
 
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
                                  dask-labextension 
  
+=======
+RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
+
+RUN jupyter labextension install jupyter-leaflet \
+                                 @jupyterlab/git \
+                                 dask-labextension
+
+>>>>>>> cd2876080fcb2b99e558295e4946da35c47aee8d
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
     && cd jupyterlab-kubeflow-kale \
     && jlpm install \
     && jlpm run build \
+<<<<<<< HEAD
     && jupyter labextension install .                      
+=======
+    && jupyter labextension install .
+>>>>>>> cd2876080fcb2b99e558295e4946da35c47aee8d
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
                                         jupyterlab_git \
                                         jupyterlab_sql \
                                         --sys-prefix
+
 
 USER root
 COPY prepare.sh /usr/bin/prepare.sh
@@ -68,12 +89,14 @@ ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 COPY config.yaml /pre-home
 COPY worker-template.yaml /pre-home
 COPY .condarc /pre-home
-COPY .bashrc /pre-home
 
 RUN mkdir /gcs && chown -R $NB_USER /gcs
 RUN mkdir /opt/app
-
 RUN /usr/bin/prepare.sh
+
+RUN conda config --set auto_activate_base false
+RUN chsh -s $(which zsh) $NB_USER
+RUN chsh -s $(which zsh) root
 
 # Add NB_USER to sudo
 RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
@@ -81,6 +104,17 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 
 # Configure container startup
 USER $NB_USER
+<<<<<<< HEAD
+=======
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+COPY .zshrc /home/$NB_USER
+RUN conda init zsh
+COPY jupyter_notebook_config.py /home/$NB_USER/.jupyter
+COPY overrides.json /opt/conda/share/jupyter/lab/settings
+
+
+>>>>>>> cd2876080fcb2b99e558295e4946da35c47aee8d
 EXPOSE 8888
+ENV SHELL /usr/bin/zsh
 ENV NB_PREFIX /
 CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]

@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:lab-1.0.4
+FROM jupyter/base-notebook:lab-1.2.1
 
 USER root
 RUN apt-get update && \
@@ -35,10 +35,6 @@ RUN conda install --yes \
     ipywidgets \
     ipyleaflet \
     jupyter \
-    # beautifulsoup4 \
-    # spacy \
-    # jupyterlab=0.35.4 \
-    # jupyterlab_launcher=0.13.1 \
     jupyter_client \
     holoviews \
     libsodium \
