@@ -3,7 +3,7 @@
 set -x
 
 echo "Copy files from pre-load directory into home"
-cp -r -v /pre-home/. /home/$NB_USER
+cp --update -r -v /pre-home/. /home/$NB_USER
 
 if [ -z "$EXAMPLES_GIT_URL" ]; then
     export EXAMPLES_GIT_URL=https://github.com/idalab-de/pangeo-example-notebooks
@@ -47,6 +47,9 @@ if [ "$GCSFUSE_BUCKET" ]; then
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
 
+conda init bash
+conda config --set auto_activate_base false
+
 # Run extra commands
 # export PYSPARK_PYTHON=python3
 # export PYSPARK_DRIVER_PYTHON=python3
@@ -62,9 +65,6 @@ fi
 # --driver-java-options=-Xmx4096M \
 # --driver-java-options=-Dlog4j.logLevel=info"
 
-<<<<<<< HEAD
 # chmod 400 ~/.ssh/id_rsa
 
-=======
->>>>>>> cd2876080fcb2b99e558295e4946da35c47aee8d
 $@
