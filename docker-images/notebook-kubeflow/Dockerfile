@@ -89,7 +89,11 @@ USER $NB_USER
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 COPY .zshrc /home/$NB_USER
 RUN conda init zsh
+COPY jupyter_notebook_config.py /home/$NB_USER/.jupyter
+COPY overrides.json /opt/conda/share/jupyter/lab/settings
+
 
 EXPOSE 8888
+ENV SHELL /usr/bin/zsh
 ENV NB_PREFIX /
 CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
