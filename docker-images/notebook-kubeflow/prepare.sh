@@ -2,9 +2,25 @@
 
 set -x
 
-echo "Copy files from pre-load directory into home"
-cp --update -r -v /pre-home/. /home/$NB_USER
+echo "Copy config files into home"
+if [ -z "$USER_CONFIG_URL" ]; then
+    export USER_CONFIG_URL=https://github.com/idalab-de/user-config
+fi
 
+git clone $USER_CONFIG_URL user-config
+cd user-config
+cp .condarc /home/$NB_USER
+cp .zshrc /home/$NB_USER
+cp jupyter_notebook_config.py /home/$NB_USER/.jupyter
+cp overrides.json /opt/conda/share/jupyter/lab/settings
+cp config.yaml /home/$NB_USER
+cp worker-template.yaml /home/$NB_USER
+cd ..
+export SHELL=/usr/bin/zsh
+conda init zsh
+conda config --set auto_activate_base false
+
+echo "Copy example notebooks"
 if [ -z "$EXAMPLES_GIT_URL" ]; then
     export EXAMPLES_GIT_URL=https://github.com/idalab-de/pangeo-example-notebooks
 fi
@@ -47,24 +63,6 @@ if [ "$GCSFUSE_BUCKET" ]; then
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
 
-conda init bash
-conda config --set auto_activate_base false
-
-# Run extra commands
-# export PYSPARK_PYTHON=python3
-# export PYSPARK_DRIVER_PYTHON=python3
-# export SPARK_PUBLIC_DNS=hub.idalab.de${JUPYTERHUB_SERVICE_PREFIX}proxy/4040/jobs/
-# export SPARK_OPTS="--deploy-mode=client \
-# --master=k8s://https://kubernetes.default.svc \
-# --conf spark.driver.host=`hostname -I` \
-# --conf spark.driver.pod.name=${HOSTNAME} \
-# --conf spark.kubernetes.container.image=idalab/spark-py:spark \
-# --conf spark.ui.proxyBase=${JUPYTERHUB_SERVICE_PREFIX}proxy/4040 \
-# --conf spark.executor.instances=2 \
-# --driver-java-options=-Xms1024M \
-# --driver-java-options=-Xmx4096M \
-# --driver-java-options=-Dlog4j.logLevel=info"
-
-chmod 400 ~/.ssh/id_rsa
+start.sh jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
 $@
