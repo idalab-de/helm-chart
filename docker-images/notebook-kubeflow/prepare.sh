@@ -2,23 +2,33 @@
 
 set -x
 
-echo "Copy config files into home"
+# Install oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+export SHELL=/usr/bin/zsh
+conda init zsh
+conda config --set auto_activate_base false
+
+echo "Copy config files into user home"
 if [ -z "$USER_CONFIG_URL" ]; then
     export USER_CONFIG_URL=https://github.com/idalab-de/user-config
+    export USER_CONFIG=$(echo $NB_PREFIX | cut -d/ -f3)
 fi
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone $USER_CONFIG_URL user-config
-cd user-config
+if [ -d user-config/"$USER_CONFIG" ]
+then
+    cd user-config/$USER_CONFIG
+else
+    cd user-config
+fi
+
 cp .condarc /home/$NB_USER
 cp .zshrc /home/$NB_USER
 cp jupyter_notebook_config.py /home/$NB_USER/.jupyter
 cp overrides.json /opt/conda/share/jupyter/lab/settings
 cp config.yaml /home/$NB_USER
 cp worker-template.yaml /home/$NB_USER
-cd ..
-export SHELL=/usr/bin/zsh
-conda init zsh
-conda config --set auto_activate_base false
+cd
+
 
 echo "Copy example notebooks"
 if [ -z "$EXAMPLES_GIT_URL" ]; then
