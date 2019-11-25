@@ -1,0 +1,35 @@
+metadata:
+spec:
+  restartPolicy: Never
+  containers:
+  - args:
+      - dask-worker
+      - --nthreads
+      - '2'
+      - --no-bokeh
+      - --memory-limit
+      - 6GB
+      - --death-timeout
+      - '60'
+    image: idalab/hub_worker:0.0.4
+    # image: idalab/hub_worker_nlp:0.0.4 ## Use this if you want to use the nlp version
+    name: dask-worker
+    securityContext:
+      capabilities:
+        add: [SYS_ADMIN]
+      privileged: true
+    env:
+      - name: GCSFUSE_BUCKET
+        value: pangeo-data
+    resources:
+      limits:
+        cpu: "1.75"
+        memory: 6G
+      requests:
+        cpu: "1.75"
+        memory: 6G
+  tolerations:
+    - key: "hub.jupyter.org/dedicated"
+      operator: "Equal"
+      value: "worker"
+      effect: "NoSchedule"
