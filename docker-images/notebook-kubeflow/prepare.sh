@@ -6,7 +6,6 @@ set -x
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 export SHELL=/usr/bin/zsh
 conda init zsh
-conda config --set auto_activate_base false
 
 echo "Copy config files into user home"
 if [ -z "$USER_CONFIG_URL" ]; then
@@ -18,7 +17,7 @@ if [ -d user-config/"$USER_CONFIG" ]
 then
     cd user-config/$USER_CONFIG
 else
-    cd user-config
+    cd user-config/defaults
 fi
 
 cp .condarc /home/$NB_USER
