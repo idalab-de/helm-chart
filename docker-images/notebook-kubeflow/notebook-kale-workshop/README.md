@@ -1,4 +1,4 @@
-Registry Location: **felihong/kubeflow:kale-workshop**
+Registry Location: **idalab/hub_user:kubeflow-kale-workshop**
 
 Image Enhancements:
 
