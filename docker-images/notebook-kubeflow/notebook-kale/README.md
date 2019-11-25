@@ -6,6 +6,7 @@ Image Enhancements:
 * Installation of Kale Jupyterlab extension https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale
 * Set jupyter user as default user
 * Installation of Kubeflow Pipeline SDK
+* Upate Jupyterlab version to `jupyterlab==1.1.1`
 
 
 To build the image run:
