@@ -8,25 +8,24 @@ export SHELL=/usr/bin/zsh
 conda init zsh
 
 echo "Copy config files into user home"
+
 if [ -z "$USER_CONFIG_URL" ]; then
     export USER_CONFIG_URL=https://github.com/idalab-de/user-config
-    export USER_CONFIG=$(echo $NB_PREFIX | cut -d/ -f3)
-fi
-git clone $USER_CONFIG_URL user-config
-if [ -d user-config/"$USER_CONFIG" ]
-then
-    cd user-config/$USER_CONFIG
-else
-    cd user-config/defaults
 fi
 
-cp .condarc /home/$NB_USER
-cp .zshrc /home/$NB_USER
-cp jupyter_notebook_config.py /home/$NB_USER/.jupyter
-cp overrides.json /opt/conda/share/jupyter/lab/settings
-cp config.yaml /home/$NB_USER
-cp worker-template.yaml /home/$NB_USER
-cd
+export USER_CONFIG=$(echo $NB_PREFIX | cut -d/ -f3)
+git clone $USER_CONFIG_URL user-config
+
+if [ -d user-config/"$USER_CONFIG" ]
+then
+    cp -r user-config/$USER_CONFIG/. /home/$NB_USER
+else
+    cp -r user-config/defaults/. /home/$NB_USER
+fi
+
+echo "Move configs that do not live in home dir"
+mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
+mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
 
 
 echo "Copy example notebooks"
