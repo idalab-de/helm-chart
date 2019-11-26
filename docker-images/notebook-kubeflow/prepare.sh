@@ -14,6 +14,7 @@ if [ -z "$USER_CONFIG_URL" ]; then
 fi
 
 export USER_CONFIG=$(echo $NB_PREFIX | cut -d/ -f3)
+rm -rf user-config
 git clone $USER_CONFIG_URL user-config
 
 if [ -d user-config/"$USER_CONFIG" ]
