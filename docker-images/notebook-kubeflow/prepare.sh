@@ -2,7 +2,7 @@
 
 set -x
 if [ -z "$DEVMODE" ]; then
-    until curl --head localhost:15000 ; do echo "Waiting for Sidecar"; sleep 3 ; done ; echo "Sidecar available";
+    until curl --head localhost:15000 ; do echo "Waiting for Sidecar"; sleep 3 ; done ; sleep 5 ; echo "Sidecar available";
 fi
 sudo chmod 777 /home/$NB_USER
 cd /home/$NB_USER
