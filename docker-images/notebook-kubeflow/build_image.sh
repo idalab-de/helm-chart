@@ -1,7 +1,7 @@
 #!/bin/bash 
 
-image_name=idalab/hub_user
-image_tag=kubeflow-kale-workshop
+image_name=idalab/kube_user
+image_tag=hong_dev
 full_image_name=${image_name}:${image_tag}
 
 docker build -t "${full_image_name}" .

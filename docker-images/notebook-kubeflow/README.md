@@ -1,4 +1,4 @@
-Registry Location: **idalab/hub_user:kubeflow-kale-workshop**
+Registry Location: **idalab/kube_user:hong_dev**
 
 Image Enhancements:
 
