@@ -31,8 +31,8 @@ else
 fi
 
 echo "Move configs that do not live in home dir"
-mkdir -p /home/$NB_USER/.jupyter && cp /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
-mkdir -p /opt/conda/share/jupyter/lab/settings && cp /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
+mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
+mkdir -p /opt/conda/share/jupyter/lab/settings && mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
 
 
 echo "Copy example notebooks"
