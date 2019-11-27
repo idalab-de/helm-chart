@@ -37,7 +37,7 @@ RUN pip install --upgrade pip
 
 # Also install the Kubeflow Pipeline SDK
 RUN pip install pipenv \
-                jupyterlab==1.1.1 \
+                jupyterlab==1.1.1 \ 
                 jupyterlab_latex \
                 nbserverproxy \
                 jupyterlab-git \
