@@ -35,10 +35,6 @@ RUN conda install --yes \
     ipywidgets \
     ipyleaflet \
     jupyter \
-    # beautifulsoup4 \
-    # spacy \
-    # jupyterlab=0.35.4 \
-    # jupyterlab_launcher=0.13.1 \
     jupyter_client \
     holoviews \
     libsodium \
