@@ -63,6 +63,8 @@ RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab_sql \
                                         --sys-prefix
 
+RUN curl https://sdk.cloud.google.com | zsh                                        
+
 USER root
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
