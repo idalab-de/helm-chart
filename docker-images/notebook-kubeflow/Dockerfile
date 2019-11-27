@@ -78,9 +78,4 @@ EXPOSE 8888
 ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV NB_PREFIX /
 
-#ENV NB_PREFIX=/notebook/david-hinrichs/local
-#RUN /usr/bin/prepare.sh
-#ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
-#CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=/notebook/david-hinrichs/testitest"]
-
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
