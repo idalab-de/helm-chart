@@ -67,8 +67,6 @@ COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
 RUN mkdir /gcs && chown -R $NB_USER /gcs
 RUN mkdir /opt/app
-RUN chsh -s $(which zsh) $NB_USER
-RUN chsh -s $(which zsh) root
 
 # Add NB_USER to sudo
 RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
@@ -78,8 +76,11 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 USER $NB_USER
 EXPOSE 8888
 ENV DASK_CONFIG=/home/$NB_USER/config.yaml
-ENV SHELL /usr/bin/zsh
 ENV NB_PREFIX /
 
+#ENV NB_PREFIX=/notebook/david-hinrichs/local
+#RUN /usr/bin/prepare.sh
+#ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
+#CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=/notebook/david-hinrichs/testitest"]
+
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
-#CMD ["sh", "-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]

@@ -1,10 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 set -x
+if [ -z "$DEVMODE" ]; then
+    until curl --head localhost:15000 ; do echo "Waiting for Sidecar"; sleep 3 ; done ; echo "Sidecar available";
+fi
+sudo chmod 777 /home/$NB_USER
+cd /home/$NB_USER
 
-# Install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Use zsh as standard shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 export SHELL=/usr/bin/zsh
+sudo chsh -s $(which zsh) $NB_USER
 conda init zsh
 
 echo "Copy config files into user home"
@@ -25,8 +31,8 @@ else
 fi
 
 echo "Move configs that do not live in home dir"
-mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
-mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
+mkdir -p /home/$NB_USER/.jupyter && cp /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
+mkdir -p /opt/conda/share/jupyter/lab/settings && cp /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
 
 
 echo "Copy example notebooks"
@@ -35,6 +41,7 @@ if [ -z "$EXAMPLES_GIT_URL" ]; then
 fi
 rmdir examples &> /dev/null # deletes directory if empty, in favour of fresh clone
 if [ ! -d "examples" ]; then
+  mkdir examples
   git clone $EXAMPLES_GIT_URL examples
 fi
 
@@ -72,6 +79,6 @@ if [ "$GCSFUSE_BUCKET" ]; then
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
 
-start.sh jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
+jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
 $@
