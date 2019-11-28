@@ -35,9 +35,9 @@ mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py
 mkdir -p /opt/conda/share/jupyter/lab/settings && mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
 
 
-echo "Copy example notebooks"
+echo "Copy data science handbook notebooks"
 if [ -z "$EXAMPLES_GIT_URL" ]; then
-    export EXAMPLES_GIT_URL=https://github.com/idalab-de/pangeo-example-notebooks
+    export EXAMPLES_GIT_URL=https://github.com/idalab-de/PythonDataScienceHandbook
 fi
 rmdir examples &> /dev/null # deletes directory if empty, in favour of fresh clone
 if [ ! -d "examples" ]; then
