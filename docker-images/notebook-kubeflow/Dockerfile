@@ -1,4 +1,4 @@
-FROM idalab/hub_worker:lab-1.0.4
+FROM idalab/kube_worker:lab-1.1.3
 
 USER root
 RUN apt-get update && \
@@ -29,14 +29,15 @@ RUN conda install --yes \
     -c conda-forge \
     -c anaconda \
     jupyterlab_server \
+    voila-gridstack \
     alembic \
+    voila \
     && conda clean --all -f -y
 
 RUN pip install --upgrade pip
 
 # Also install the Kubeflow Pipeline SDK
 RUN pip install pipenv \
-                jupyterlab_latex \
                 nbserverproxy \
                 jupyterlab-git \
                 https://storage.googleapis.com/ml-pipeline/release/latest/kfp.tar.gz \
@@ -47,6 +48,7 @@ RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
 
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
+                                 @jupyter-voila/jupyterlab-preview \
                                  dask-labextension
 
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
@@ -61,6 +63,9 @@ RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab_sql \
                                         --sys-prefix
 
+RUN jupyter serverextension enable \
+                            voila \
+                            --sys-prefix
 
 RUN curl https://sdk.cloud.google.com | zsh
 

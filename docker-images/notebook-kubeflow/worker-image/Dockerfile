@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:lab-1.0.4
+FROM jupyter/base-notebook:lab-1.1.3
 
 USER root
 RUN apt-get update && \
@@ -44,6 +44,7 @@ RUN conda install --yes \
     libsodium \
     lz4 \
     matplotlib \
+    plotly \
     msgpack-python \
     nb_conda_kernels \
     netcdf4>1.4 \
