@@ -36,10 +36,6 @@ RUN conda install --yes \
     ipywidgets \
     ipyleaflet \
     jupyter \
-    # beautifulsoup4 \
-    # spacy \
-    # jupyterlab=0.35.4 \
-    # jupyterlab_launcher=0.13.1 \
     jupyter_client \
     holoviews \
     libsodium \
@@ -96,6 +92,7 @@ RUN conda install --quiet --yes \
         'r-sparklyr=1.0*' \
         'r-tidyverse=1.2*' \
         'unixodbc=2.3.*' \
+        'repr=1.*' \
         && \
         conda clean --all -f -y && \
         fix-permissions $CONDA_DIR
