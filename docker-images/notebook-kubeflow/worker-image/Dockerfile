@@ -84,6 +84,9 @@ RUN conda install --quiet --yes \
         'r-plyr=1.8*' \
         'r-randomforest=4.6*' \
         'r-rcurl=1.95*' \
+        'r-xgboost=0.90*' \
+        'r-glmnet=2.*' \
+        'r-modelr=0.1.*' \
         'r-reshape2=1.4*' \
         'r-rmarkdown=1.14*' \
         'r-rodbc=1.3*' \

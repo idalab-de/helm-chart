@@ -49,6 +49,7 @@ RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
                                  @jupyter-voila/jupyterlab-preview \
+                                 @lckr/jupyterlab_variableinspector \
                                  dask-labextension
 
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
