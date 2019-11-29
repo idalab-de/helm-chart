@@ -50,6 +50,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
+                                 @jupyterlab/toc \
                                  dask-labextension
 
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
