@@ -84,9 +84,9 @@ RUN conda install --quiet --yes \
         'r-plyr=1.8*' \
         'r-randomforest=4.6*' \
         'r-rcurl=1.95*' \
-        'r-xgboost=0.90*' \
-        'r-glmnet=2.*' \
-        'r-modelr=0.1.*' \
+        'r-xgboost=*' \
+        'r-glmnet=*' \
+        'r-modelr=*' \
         'r-reshape2=1.4*' \
         'r-rmarkdown=1.14*' \
         'r-rodbc=1.3*' \
@@ -95,7 +95,7 @@ RUN conda install --quiet --yes \
         'r-sparklyr=1.0*' \
         'r-tidyverse=1.2*' \
         'unixodbc=2.3.*' \
-        'repr=1.*' \
+        'r-repr=*' \
         && \
         conda clean --all -f -y && \
         fix-permissions $CONDA_DIR
