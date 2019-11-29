@@ -32,6 +32,8 @@ RUN conda install --yes \
     voila-gridstack \
     alembic \
     voila \
+    black \
+    jupyterlab_code_formatter \
     && conda clean --all -f -y
 
 RUN pip install --upgrade pip
@@ -51,6 +53,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
                                  @jupyterlab/toc \
+                                 @ryantam626/jupyterlab_code_formatter \
                                  dask-labextension
 
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
@@ -63,6 +66,7 @@ RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
                                         jupyterlab_git \
                                         jupyterlab_sql \
+                                        jupyterlab_code_formatter \
                                         --sys-prefix
 
 RUN jupyter serverextension enable \
