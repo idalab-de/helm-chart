@@ -95,13 +95,13 @@ cd .ssh
 if [ ! -f "id_rsa" ]; then
     echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
     ssh-keygen -t rsa -b 4096 -N '' -f $HOME/.ssh/id_rsa 
-    chmod 400 $HOME/.ssh/id_rsa
     eval "$(ssh-agent -s)" 
     ssh-add $HOME/.ssh/id_rsa 
     cd ..
     gsutil rsync -r .ssh gs://user_key_bucket/${USER_CONFIG}
 fi
 cd ..
+chmod 400 $HOME/.ssh/id_rsa
 
 jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
