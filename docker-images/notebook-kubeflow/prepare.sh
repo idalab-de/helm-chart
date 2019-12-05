@@ -95,6 +95,7 @@ cd .ssh
 if [ ! -f "id_rsa" ]; then
     echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
     ssh-keygen -t rsa -b 4096 -N '' -f $HOME/.ssh/id_rsa 
+    chmod 400 $HOME/.ssh/id_rsa
     eval "$(ssh-agent -s)" 
     ssh-add $HOME/.ssh/id_rsa 
     cd ..
