@@ -56,7 +56,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @ryantam626/jupyterlab_code_formatter \
                                  dask-labextension
 
-RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
+RUN git clone -b kubecon-workshop https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
     && cd jupyterlab-kubeflow-kale \
     && jlpm install \
     && jlpm run build \
