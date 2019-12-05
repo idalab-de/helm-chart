@@ -79,6 +79,28 @@ if [ "$GCSFUSE_BUCKET" ]; then
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
 
+# Generating private keys for GCP service account, this is an alternative approach of "gcloud init"
+export PROJECT=idalab-kube
+export SERVICE_ACCOUNT=kubeflow-user@${PROJECT}.iam.gserviceaccount.com
+mkdir .service_account
+gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.service_account/KEY.json 
+gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json 
+gcloud config set project ${PROJECT}
+
+# Generating or mounting ssh keys for user
+mkdir .ssh
+gsutil rsync -r gs://user_key_bucket/${USER_CONFIG} .ssh
+cd .ssh
+if [ ! -f "id_rsa" ]; then
+    echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
+    ssh-keygen -t rsa -b 4096 -N '' -f $HOME/.ssh/id_rsa 
+    eval "$(ssh-agent -s)" 
+    ssh-add $HOME/.ssh/id_rsa 
+    cd ..
+    gsutil rsync -r .ssh gs://user_key_bucket/${USER_CONFIG}
+fi
+cd ..
+
 jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
 $@
