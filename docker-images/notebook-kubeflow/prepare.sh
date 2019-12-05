@@ -88,8 +88,9 @@ gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json
 gcloud config set project ${PROJECT}
 
 # Generating or mounting ssh keys for user
+export USER_KEY_BUCKET=user_key_bucket
 mkdir .ssh
-gsutil rsync -r gs://user_key_bucket/${USER_CONFIG} .ssh
+gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
 cd .ssh
 if [ ! -f "id_rsa" ]; then
     echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
