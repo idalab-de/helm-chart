@@ -87,21 +87,29 @@ gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.
 gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json 
 gcloud config set project ${PROJECT}
 
-# Generating or mounting ssh keys for user
+# Generate key folder automatically for new user
 export USER_KEY_BUCKET=user_key_bucket
+gsutil -q stat gs://${USER_KEY_BUCKET}/${USER_CONFIG} &> /dev/null
+if [ $? -eq 1 ]; then 
+    echo "User key folder not found, create one with user name"
+    mkdir ${USER_CONFIG}
+    touch ${USER_CONFIG}/init # It won't work if the local directory is empty
+    gsutil cp -r ${USER_CONFIG} gs://${USER_KEY_BUCKET}
+    rm -r ${USER_CONFIG}
+    gsutil rm gs://${USER_KEY_BUCKET}/${USER_CONFIG}/init 
+fi
+
+# Mount or create SSH key pairs
 mkdir .ssh
 gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
-cd .ssh
-if [ ! -f "id_rsa" ]; then
+if [ ! -f ".ssh/id_rsa" ]; then
     echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
-    ssh-keygen -t rsa -b 4096 -N '' -f $HOME/.ssh/id_rsa 
+    ssh-keygen -t rsa -b 4096 -N '' -f .ssh/id_rsa 
     eval "$(ssh-agent -s)" 
-    ssh-add $HOME/.ssh/id_rsa 
-    cd ..
-    gsutil rsync -r .ssh gs://user_key_bucket/${USER_CONFIG}
+    ssh-add .ssh/id_rsa 
+    gsutil rsync -r .ssh gs://${USER_KEY_BUCKET}/${USER_CONFIG}
 fi
-cd ..
-chmod 400 $HOME/.ssh/id_rsa
+sudo chmod 400 .ssh/id_rsa
 
 jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
