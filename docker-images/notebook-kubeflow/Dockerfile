@@ -54,7 +54,9 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @lckr/jupyterlab_variableinspector \
                                  @jupyterlab/toc \
                                  @ryantam626/jupyterlab_code_formatter \
-                                 dask-labextension
+                                 dask-labextension \
+                                 plotlywidget@1.3.0 \
+                                 jupyterlab-plotly@1.3.0
 
 RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
     && cd jupyterlab-kubeflow-kale \
