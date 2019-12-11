@@ -56,7 +56,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @ryantam626/jupyterlab_code_formatter \
                                  dask-labextension
 
-RUN git clone https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
+RUN git clone -b kubecon-workshop https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
     && cd jupyterlab-kubeflow-kale \
     && jlpm install \
     && jlpm run build \
@@ -73,9 +73,16 @@ RUN jupyter serverextension enable \
                             voila \
                             --sys-prefix
 
-RUN curl https://sdk.cloud.google.com | zsh
-
 USER root
+
+# Install Google Cloud SDK 
+RUN apt-get update \
+    && yes | apt-get install gnupg \
+    && echo "deb http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && apt-get update \
+    && yes | apt-get install google-cloud-sdk 
+    
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
 RUN mkdir /gcs && chown -R $NB_USER /gcs

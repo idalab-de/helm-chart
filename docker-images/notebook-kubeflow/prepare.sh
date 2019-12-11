@@ -79,6 +79,38 @@ if [ "$GCSFUSE_BUCKET" ]; then
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
 
+# Generating private keys for GCP service account, this is an alternative approach of "gcloud init"
+export PROJECT=idalab-kube
+export SERVICE_ACCOUNT=kubeflow-user@${PROJECT}.iam.gserviceaccount.com
+mkdir .service_account
+gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.service_account/KEY.json 
+gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json 
+gcloud config set project ${PROJECT}
+
+# Generate key folder automatically for new user
+export USER_KEY_BUCKET=user_key_bucket
+gsutil -q stat gs://${USER_KEY_BUCKET}/${USER_CONFIG} &> /dev/null
+if [ $? -eq 1 ]; then 
+    echo "User key folder not found, create one with user name"
+    mkdir ${USER_CONFIG}
+    touch ${USER_CONFIG}/init # It won't work if the local directory is empty
+    gsutil cp -r ${USER_CONFIG} gs://${USER_KEY_BUCKET}
+    rm -r ${USER_CONFIG}
+    gsutil rm gs://${USER_KEY_BUCKET}/${USER_CONFIG}/init 
+fi
+
+# Mount or create SSH key pairs
+mkdir .ssh
+gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
+if [ ! -f ".ssh/id_rsa" ]; then
+    echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
+    ssh-keygen -t rsa -b 4096 -N '' -f .ssh/id_rsa 
+    eval "$(ssh-agent -s)" 
+    ssh-add .ssh/id_rsa 
+    gsutil rsync -r .ssh gs://${USER_KEY_BUCKET}/${USER_CONFIG}
+fi
+sudo chmod 400 .ssh/id_rsa
+
 jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
 
 $@
