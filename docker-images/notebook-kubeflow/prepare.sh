@@ -34,27 +34,6 @@ echo "Move configs that do not live in home dir"
 mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
 mkdir -p /opt/conda/share/jupyter/lab/settings && mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
 
-
-echo "Copy data science handbook notebooks"
-if [ -z "$EXAMPLES_GIT_URL" ]; then
-    export EXAMPLES_GIT_URL=https://github.com/idalab-de/PythonDataScienceHandbook
-fi
-rmdir examples &> /dev/null # deletes directory if empty, in favour of fresh clone
-if [ ! -d "examples" ]; then
-  mkdir examples
-  git clone $EXAMPLES_GIT_URL examples
-fi
-
-cd examples
-git remote set-url origin $EXAMPLES_GIT_URL
-git fetch origin
-git reset --hard origin/master
-git merge --strategy-option=theirs origin/master
-if [ ! -f DONT_SAVE_ANYTHING_HERE.md ]; then
-  echo "Files in this directory should be treated as read-only"  > DONT_SAVE_ANYTHING_HERE.md
-fi
-
-cd ..
 mkdir -p work
 
 if [ -e "/opt/app/environment.yml" ]; then
@@ -78,6 +57,54 @@ if [ "$GCSFUSE_BUCKET" ]; then
     echo "Mounting $GCSFUSE_BUCKET to /gcs"
     /opt/conda/bin/gcsfuse $GCSFUSE_BUCKET /gcs --background
 fi
+
+# Generating private keys for GCP service account, this is an alternative approach of "gcloud init"
+export PROJECT=idalab-kube
+export SERVICE_ACCOUNT=kubeflow-user@${PROJECT}.iam.gserviceaccount.com
+mkdir .service_account
+gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.service_account/KEY.json
+gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json
+gcloud config set project ${PROJECT}
+
+# Mounting practical skills and project template repositories
+export PRACTICALSKILLS_GIT_URL=bitbucket_idalab_idalab-practicalskills
+export NOTEBOOK_GIT_URL=https://github.com/idalab-de/PythonDataScienceHandbook.git
+export TEMPLATE_GIT_URL=bitbucket_idalab_idalab-project-template
+if [ ! -d "practical-skills" ]; then
+    gcloud source repos clone ${PRACTICALSKILLS_GIT_URL} practical-skills --project=${PROJECT}
+    cd practical-skills/notebooks
+    rm -rf PythonDataScienceHandbook
+    git clone ${NOTEBOOK_GIT_URL}
+    cd ~
+fi
+
+if [ ! -d "project-template" ]; then
+    gcloud source repos clone ${TEMPLATE_GIT_URL} project-template --project=${PROJECT}
+fi
+
+# Generate key folder automatically for new user
+export USER_KEY_BUCKET=user_key_bucket
+gsutil -q stat gs://${USER_KEY_BUCKET}/${USER_CONFIG} &> /dev/null
+if [ $? -eq 1 ]; then
+    echo "User key folder not found, create one with user name"
+    mkdir ${USER_CONFIG}
+    touch ${USER_CONFIG}/init # It won't work if the local directory is empty
+    gsutil cp -r ${USER_CONFIG} gs://${USER_KEY_BUCKET}
+    rm -r ${USER_CONFIG}
+    gsutil rm gs://${USER_KEY_BUCKET}/${USER_CONFIG}/init
+fi
+
+# Mount or create SSH key pairs
+mkdir .ssh
+gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
+if [ ! -f ".ssh/id_rsa" ]; then
+    echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
+    ssh-keygen -t rsa -b 4096 -N '' -f .ssh/id_rsa
+    eval "$(ssh-agent -s)"
+    ssh-add .ssh/id_rsa
+    gsutil rsync -r .ssh gs://${USER_KEY_BUCKET}/${USER_CONFIG}
+fi
+sudo chmod 400 .ssh/id_rsa
 
 jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX --VoilaConfiguration.template=gridstack --VoilaConfiguration.resources='{"gridstack": {"show_handles": True}}'
 
