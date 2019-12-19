@@ -2,7 +2,7 @@
 
 set -x
 if [ -z "$DEVMODE" ]; then
-    until curl --head localhost:15000 ; do echo "Waiting for Sidecar"; sleep 3 ; done ; sleep 5 ; echo "Sidecar available";
+    until curl --head localhost:15000 ; do echo "Waiting for Sidecar"; sleep 5 ; done ; sleep 5 ; echo "Sidecar available";
 fi
 sudo chmod 777 /home/$NB_USER
 cd /home/$NB_USER
@@ -59,53 +59,55 @@ if [ "$GCSFUSE_BUCKET" ]; then
 fi
 
 # Generating private keys for GCP service account, this is an alternative approach of "gcloud init"
-export PROJECT=idalab-kube
-export SERVICE_ACCOUNT=kubeflow-user@${PROJECT}.iam.gserviceaccount.com
-mkdir .service_account
-gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.service_account/KEY.json 
-gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json 
-gcloud config set project ${PROJECT}
+if [ -z "$DEVMODE" ]; then
+    export PROJECT=idalab-kube
+    export SERVICE_ACCOUNT=kubeflow-user@${PROJECT}.iam.gserviceaccount.com
+    mkdir .service_account
+    gcloud iam service-accounts keys create --iam-account ${SERVICE_ACCOUNT} $HOME/.service_account/KEY.json
+    gcloud auth activate-service-account ${SERVICE_ACCOUNT} --key-file=key.json
+    gcloud config set project ${PROJECT}
 
-# Mounting practical skills and project template repositories
-export PRACTICALSKILLS_GIT_URL=bitbucket_idalab_idalab-practicalskills
-export NOTEBOOK_GIT_URL=https://github.com/idalab-de/PythonDataScienceHandbook.git
-export TEMPLATE_GIT_URL=bitbucket_idalab_idalab-project-template
-if [ ! -d "practical-skills" ]; then
-    gcloud source repos clone ${PRACTICALSKILLS_GIT_URL} practical-skills --project=${PROJECT} 
-    cd practical-skills/notebooks
-    rm -rf PythonDataScienceHandbook
-    git clone ${NOTEBOOK_GIT_URL}
-    cd ~
+    # Mounting practical skills and project template repositories
+    export PRACTICALSKILLS_GIT_URL=bitbucket_idalab_idalab-practicalskills
+    export NOTEBOOK_GIT_URL=https://github.com/idalab-de/PythonDataScienceHandbook.git
+    export TEMPLATE_GIT_URL=bitbucket_idalab_idalab-project-template
+    if [ ! -d "practical-skills" ]; then
+        gcloud source repos clone ${PRACTICALSKILLS_GIT_URL} practical-skills --project=${PROJECT}
+        cd practical-skills/notebooks
+        rm -rf PythonDataScienceHandbook
+        git clone ${NOTEBOOK_GIT_URL}
+        cd ~
+    fi
+
+    if [ ! -d "project-template" ]; then
+        gcloud source repos clone ${TEMPLATE_GIT_URL} project-template --project=${PROJECT}
+    fi
+
+    # Generate key folder automatically for new user
+    export USER_KEY_BUCKET=user_key_bucket
+    gsutil -q stat gs://${USER_KEY_BUCKET}/${USER_CONFIG} &> /dev/null
+    if [ $? -eq 1 ]; then
+        echo "User key folder not found, create one with user name"
+        mkdir ${USER_CONFIG}
+        touch ${USER_CONFIG}/init # It won't work if the local directory is empty
+        gsutil cp -r ${USER_CONFIG} gs://${USER_KEY_BUCKET}
+        rm -r ${USER_CONFIG}
+        gsutil rm gs://${USER_KEY_BUCKET}/${USER_CONFIG}/init
+    fi
+
+    # Mount or create SSH key pairs
+    mkdir .ssh
+    gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
+    if [ ! -f ".ssh/id_rsa" ]; then
+        echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
+        ssh-keygen -t rsa -b 4096 -N '' -f .ssh/id_rsa
+        eval "$(ssh-agent -s)"
+        ssh-add .ssh/id_rsa
+        gsutil rsync -r .ssh gs://${USER_KEY_BUCKET}/${USER_CONFIG}
+    fi
+    sudo chmod 400 .ssh/id_rsa
+
 fi
-
-if [ ! -d "project-template" ]; then
-    gcloud source repos clone ${TEMPLATE_GIT_URL} project-template --project=${PROJECT}
-fi
-
-# Generate key folder automatically for new user
-export USER_KEY_BUCKET=user_key_bucket
-gsutil -q stat gs://${USER_KEY_BUCKET}/${USER_CONFIG} &> /dev/null
-if [ $? -eq 1 ]; then 
-    echo "User key folder not found, create one with user name"
-    mkdir ${USER_CONFIG}
-    touch ${USER_CONFIG}/init # It won't work if the local directory is empty
-    gsutil cp -r ${USER_CONFIG} gs://${USER_KEY_BUCKET}
-    rm -r ${USER_CONFIG}
-    gsutil rm gs://${USER_KEY_BUCKET}/${USER_CONFIG}/init 
-fi
-
-# Mount or create SSH key pairs
-mkdir .ssh
-gsutil rsync -r gs://${USER_KEY_BUCKET}/${USER_CONFIG} .ssh
-if [ ! -f ".ssh/id_rsa" ]; then
-    echo "SSH keys for user ${USER_CONFIG} not found, generating SSH keys"
-    ssh-keygen -t rsa -b 4096 -N '' -f .ssh/id_rsa 
-    eval "$(ssh-agent -s)" 
-    ssh-add .ssh/id_rsa 
-    gsutil rsync -r .ssh gs://${USER_KEY_BUCKET}/${USER_CONFIG}
-fi
-sudo chmod 400 .ssh/id_rsa
-
-jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX
+jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=$NB_PREFIX --VoilaConfiguration.template=gridstack --VoilaConfiguration.resources='{"gridstack": {"show_handles": True}}'
 
 $@
