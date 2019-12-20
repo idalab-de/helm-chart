@@ -31,6 +31,7 @@ RUN conda install --yes \
     jupyterlab_server \
     voila-gridstack \
     alembic \
+    seaborn \
     voila \
     black \
     jupyterlab_code_formatter \
