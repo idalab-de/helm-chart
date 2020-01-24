@@ -47,7 +47,7 @@ RUN pip install pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
-RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
+RUN pip install kubeflow-kale
 
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
@@ -60,11 +60,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  jupyterlab-plotly@1.3.0 \
                                  jupyterlab-dash
 
-RUN git clone -b kubecon-workshop https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
-    && cd jupyterlab-kubeflow-kale \
-    && jlpm install \
-    && jlpm run build \
-    && jupyter labextension install .
+RUN jupyter labextension install kubeflow-kale-launcher
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
