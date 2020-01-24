@@ -30,6 +30,12 @@ else
     cp -r user-config/defaults/. /home/$NB_USER
 fi
 
+# Set git committer name & email globally
+export USER_NAME=$(echo ${USER_CONFIG} | tr "-" " ")
+export USER_EMAIL=$(echo ${USER_NAME}@idalab.de | tr " " ".")
+git config --global user.email ${USER_EMAIL}
+git config --global user.name ${USER_NAME}
+
 echo "Move configs that do not live in home dir"
 mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
 mkdir -p /opt/conda/share/jupyter/lab/settings && mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings

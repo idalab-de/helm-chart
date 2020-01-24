@@ -47,7 +47,7 @@ RUN pip install pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
-RUN pip install git+https://github.com/kubeflow-kale/kale.git@kubecon-workshop
+RUN pip install kubeflow-kale
 
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
@@ -60,11 +60,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  jupyterlab-plotly@1.3.0 \
                                  jupyterlab-dash
 
-RUN git clone -b kubecon-workshop https://github.com/kubeflow-kale/jupyterlab-kubeflow-kale.git \
-    && cd jupyterlab-kubeflow-kale \
-    && jlpm install \
-    && jlpm run build \
-    && jupyter labextension install .
+RUN jupyter labextension install kubeflow-kale-launcher
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
@@ -86,6 +82,16 @@ RUN apt-get update \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
     && apt-get update \
     && yes | apt-get install google-cloud-sdk
+
+# Install gcsFUSE
+RUN apt-get update \
+    && apt-get install  -yq lsb \
+    && export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` \
+    && echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list \
+    && apt-get install gnupg \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && apt-get update \
+    && apt-get install gcsfuse 
 
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
