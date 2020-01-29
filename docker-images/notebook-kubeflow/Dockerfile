@@ -61,7 +61,8 @@ RUN jupyter labextension install jupyter-leaflet \
                                  plotlywidget@1.5.0 \
                                  jupyterlab-plotly@1.5.0 \
                                  jupyterlab-dash \
-                                 @jupyterlab/debugger
+                                 @jupyterlab/debugger \
+                                 @techrah/text-shortcuts
 
 RUN jupyter labextension install kubeflow-kale-launcher
 
