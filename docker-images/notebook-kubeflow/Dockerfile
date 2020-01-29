@@ -97,6 +97,9 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install gcsfuse 
 
+RUN mkdir -p /home/$NB_USER/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension 
+COPY shortcuts.jupyterlab-settings /home/$NB_USER/.jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/.
+
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
 RUN mkdir /gcs && chown -R $NB_USER /gcs

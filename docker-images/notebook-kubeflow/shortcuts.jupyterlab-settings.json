@@ -1,0 +1,26 @@
+{
+    "shortcuts": [
+        {
+            "command": "text-shortcuts:insert-text",
+            "args": {
+                "text": "%>%",
+                "autoPad": true
+            },
+            "keys": [
+                "Accel Shift M"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "text-shortcuts:insert-text",
+            "args": {
+                "text": "<-",
+                "autoPad": true
+            },
+            "keys": [
+                "Alt -"
+            ],
+            "selector": "body"
+        },
+    ]
+}
