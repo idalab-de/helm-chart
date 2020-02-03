@@ -30,6 +30,12 @@ else
     cp -r user-config/defaults/. /home/$NB_USER
 fi
 
+# Copy r shortcuts setting to enable jupyterlab extension 
+if [ ! -d .jupyter/lab/user-settings ]; then
+    mkdir -p .jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
+    cp user-config/R-user/shortcuts.jupyterlab-settings .jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/.
+fi
+
 # Set git committer name & email globally
 export USER_NAME=$(echo ${USER_CONFIG} | tr "-" " ")
 export USER_EMAIL=$(echo ${USER_NAME}@idalab.de | tr " " ".")
