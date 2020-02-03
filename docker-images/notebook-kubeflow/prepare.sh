@@ -36,6 +36,11 @@ if [ ! -d .jupyter/lab/user-settings ]; then
     cp user-config/R-user/shortcuts.jupyterlab-settings .jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/.
 fi
 
+# Re-configure Olson timezone database  
+echo "Europe/Berlin" | sudo tee /etc/timezone
+sudo rm -f /etc/localtime
+sudo dpkg-reconfigure -f noninteractive tzdata
+
 # Set git committer name & email globally
 export USER_NAME=$(echo ${USER_CONFIG} | tr "-" " ")
 export USER_EMAIL=$(echo ${USER_NAME}@idalab.de | tr " " ".")

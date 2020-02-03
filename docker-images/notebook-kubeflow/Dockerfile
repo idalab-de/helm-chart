@@ -2,6 +2,7 @@ FROM idalab/kube_worker:lab-1.2.5
 
 USER root
 RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get install \
     -yq \
     --no-install-recommends \
@@ -13,6 +14,7 @@ RUN apt-get update && \
     vim \
     man \
     tree \
+    tzdata \
     openssh-server \
     build-essential \
     bash-completion \
