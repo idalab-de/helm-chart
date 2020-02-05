@@ -30,11 +30,26 @@ else
     cp -r user-config/defaults/. /home/$NB_USER
 fi
 
+# Copy r shortcuts setting to enable jupyterlab extension 
+if [ ! -d .jupyter/lab/user-settings ]; then
+    mkdir -p .jupyter/lab/user-settings/@jupyterlab/shortcuts-extension
+    cp user-config/R-user/shortcuts.jupyterlab-settings .jupyter/lab/user-settings/@jupyterlab/shortcuts-extension/.
+fi
+
+# Re-configure Olson timezone database  
+echo "Europe/Berlin" | sudo tee /etc/timezone
+sudo rm -f /etc/localtime
+sudo dpkg-reconfigure -f noninteractive tzdata
+
 # Set git committer name & email globally
 export USER_NAME=$(echo ${USER_CONFIG} | tr "-" " ")
 export USER_EMAIL=$(echo ${USER_NAME}@idalab.de | tr " " ".")
 git config --global user.email ${USER_EMAIL}
 git config --global user.name ${USER_NAME}
+
+# Increase npm timeout setting 
+npm install -g yarn@1.15.2 
+yarn install --cwd /opt/conda/share/jupyter/lab/staging --network-timeout 1000000
 
 echo "Move configs that do not live in home dir"
 mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter

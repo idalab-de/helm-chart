@@ -1,7 +1,8 @@
-FROM idalab/kube_worker:lab-1.1.3
+FROM idalab/kube_worker:lab-1.2.5
 
 USER root
 RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get install \
     -yq \
     --no-install-recommends \
@@ -13,6 +14,7 @@ RUN apt-get update && \
     vim \
     man \
     tree \
+    tzdata \
     openssh-server \
     build-essential \
     bash-completion \
@@ -35,6 +37,8 @@ RUN conda install --yes \
     voila \
     black \
     jupyterlab_code_formatter \
+    ptvsd \
+    xeus-python notebook \
     && conda clean --all -f -y
 
 RUN pip install --upgrade pip
@@ -58,7 +62,14 @@ RUN jupyter labextension install jupyter-leaflet \
                                  dask-labextension \
                                  plotlywidget@1.5.0 \
                                  jupyterlab-plotly@1.5.0 \
-                                 jupyterlab-dash
+                                 jupyterlab-dash \
+                                 @jupyterlab/debugger \
+                                 @techrah/text-shortcuts \
+                                 @telamonian/theme-darcula \
+                                 @karosc/jupyterlab_dracula \
+                                 jupyterlab-topbar-extension \
+                                 jupyterlab-topbar-text \
+                                 jupyterlab-theme-toggle
 
 RUN jupyter labextension install kubeflow-kale-launcher
 
