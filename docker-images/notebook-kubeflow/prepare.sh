@@ -47,6 +47,10 @@ export USER_EMAIL=$(echo ${USER_NAME}@idalab.de | tr " " ".")
 git config --global user.email ${USER_EMAIL}
 git config --global user.name ${USER_NAME}
 
+# Increase npm timeout setting 
+npm install -g yarn@1.15.2 
+yarn install --cwd /opt/conda/share/jupyter/lab/staging --network-timeout 1000000
+
 echo "Move configs that do not live in home dir"
 mkdir -p /home/$NB_USER/.jupyter && mv /home/$NB_USER/jupyter_notebook_config.py /home/$NB_USER/.jupyter
 mkdir -p /opt/conda/share/jupyter/lab/settings && mv /home/$NB_USER/overrides.json /opt/conda/share/jupyter/lab/settings
