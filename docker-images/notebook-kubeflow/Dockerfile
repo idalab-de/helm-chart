@@ -36,6 +36,7 @@ RUN conda install --yes \
     seaborn \
     voila \
     black \
+    pymysql \
     jupyterlab_code_formatter \
     ptvsd \
     xeus-python notebook \
