@@ -116,7 +116,6 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 # Configure container startup
 USER $NB_USER
 EXPOSE 8888
-EXPOSE 40000
 ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV NB_PREFIX /
 
