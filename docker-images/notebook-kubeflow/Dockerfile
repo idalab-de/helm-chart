@@ -36,6 +36,7 @@ RUN conda install --yes \
     seaborn \
     voila \
     black \
+    pymysql \
     jupyterlab_code_formatter \
     ptvsd \
     xeus-python notebook \
@@ -60,8 +61,8 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/toc \
                                  @ryantam626/jupyterlab_code_formatter \
                                  dask-labextension \
-                                 plotlywidget@1.5.0 \
-                                 jupyterlab-plotly@1.5.0 \
+                                 plotlywidget@1.5.2 \
+                                 jupyterlab-plotly@1.5.2 \
                                  jupyterlab-dash \
                                  @jupyterlab/debugger \
                                  @techrah/text-shortcuts \
