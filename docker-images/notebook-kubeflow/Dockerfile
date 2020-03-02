@@ -60,8 +60,8 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/toc \
                                  @ryantam626/jupyterlab_code_formatter \
                                  dask-labextension \
-                                 plotlywidget@1.5.0 \
-                                 jupyterlab-plotly@1.5.0 \
+                                 plotlywidget@1.5.2 \
+                                 jupyterlab-plotly@1.5.2 \
                                  jupyterlab-dash \
                                  @jupyterlab/debugger \
                                  @techrah/text-shortcuts \
@@ -116,6 +116,7 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 # Configure container startup
 USER $NB_USER
 EXPOSE 8888
+EXPOSE 40000
 ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV NB_PREFIX /
 
