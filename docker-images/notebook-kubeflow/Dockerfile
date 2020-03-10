@@ -44,11 +44,12 @@ RUN conda install --yes \
 
 RUN pip install --upgrade pip
 
-# Also install the Kubeflow Pipeline SDK
+# Install kfp SDK with known working version 
 RUN pip install pipenv \
                 nbserverproxy \
                 jupyterlab-git \
-                https://storage.googleapis.com/ml-pipeline/release/latest/kfp.tar.gz \
+                kfp==0.1.40 \
+                kfp-server-api==0.1.18.3 \ 
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
