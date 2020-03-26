@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:lab-1.2.5
+FROM jupyter/base-notebook:lab-2.0.1
 
 USER root
 RUN apt-get update && \
@@ -44,7 +44,7 @@ RUN conda install --yes \
     plotly \
     msgpack-python \
     nb_conda_kernels \
-    netcdf4>1.4 \
+    netcdf4 \
     nomkl \
     notebook \
     numba \
@@ -58,7 +58,7 @@ RUN conda install --yes \
     scikit-image \
     scikit-learn \
     toolz\
-    tornado=5.1.1 \
+    tornado \
     xarray\
     zarr\
     zict \
@@ -72,30 +72,30 @@ RUN conda install --yes \
 # R packages
 RUN conda install --quiet --yes \
         'r-base=3.6.1' \
-        'r-caret=6.0*' \
-        'r-crayon=1.3*' \
-        'r-devtools=2.0*' \
-        'r-forecast=8.7*' \
-        'r-hexbin=1.27*' \
-        'r-htmltools=0.3*' \
-        'r-htmlwidgets=1.3*' \
-        'r-irkernel=1.0*' \
-        'r-nycflights13=1.0*' \
-        'r-plyr=1.8*' \
-        'r-randomforest=4.6*' \
-        'r-rcurl=1.95*' \
-        'r-xgboost=*' \
-        'r-glmnet=*' \
-        'r-modelr=*' \
-        'r-reshape2=1.4*' \
-        'r-rmarkdown=1.14*' \
-        'r-rodbc=1.3*' \
-        'r-rsqlite=2.1*' \
-        'r-shiny=1.3*' \
-        'r-sparklyr=1.0*' \
-        'r-tidyverse=1.2*' \
-        'unixodbc=2.3.*' \
-        'r-repr=*' \
+        'r-caret' \
+        'r-crayon' \
+        'r-devtools' \
+        'r-forecast' \
+        'r-hexbin' \
+        'r-htmltools' \
+        'r-htmlwidgets' \
+        'r-irkernel' \
+        'r-nycflights13' \
+        'r-plyr' \
+        'r-randomforest' \
+        'r-rcurl' \
+        'r-xgboost' \
+        'r-glmnet' \
+        'r-modelr' \
+        'r-reshape2' \
+        'r-rmarkdown' \
+        'r-rodbc' \
+        'r-rsqlite' \
+        'r-shiny' \
+        'r-sparklyr' \
+        'r-tidyverse' \
+        'unixodbc' \
+        'r-repr' \
         && \
         conda clean --all -f -y && \
         fix-permissions $CONDA_DIR
