@@ -55,9 +55,8 @@ RUN pip install pipenv \
 
 RUN pip install kubeflow-kale
 
-RUN jupyter lab build
-
-RUN jupyter labextension install jupyter-leaflet \
+RUN jupyter labextension install --no-build \
+                                 jupyter-leaflet \
                                  @jupyterlab/git \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
