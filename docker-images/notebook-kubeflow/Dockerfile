@@ -55,8 +55,7 @@ RUN pip install pipenv \
 
 RUN pip install kubeflow-kale
 
-RUN jupyter labextension install --no-build \
-                                 jupyter-leaflet \
+RUN jupyter labextension install --debug \
                                  @jupyterlab/git \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
@@ -74,7 +73,7 @@ RUN jupyter labextension install --no-build \
                                  jupyterlab-topbar-text \
                                  jupyterlab-theme-toggle
 
-RUN jupyter labextension install kubeflow-kale-launcher
+RUN jupyter labextension install --debug kubeflow-kale-launcher
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
