@@ -22,14 +22,13 @@ RUN conda install --yes \
     -c intake \
     -c conda-forge \
     xgboost \
-    bokeh \
     bqplot \
     cython \
     cytoolz \
     dask \
     dask-ml \
     datashader \
-    distributed\
+    distributed \
     esmpy \
     fastparquet \
     gcsfs \
@@ -41,7 +40,6 @@ RUN conda install --yes \
     libsodium \
     lz4 \
     matplotlib \
-    plotly \
     msgpack-python \
     nb_conda_kernels \
     netcdf4 \
@@ -57,10 +55,10 @@ RUN conda install --yes \
     scipy \
     scikit-image \
     scikit-learn \
-    toolz\
+    toolz \
     tornado \
-    xarray\
-    zarr\
+    xarray \
+    zarr \
     zict \
     intake-xarray \
     graphviz \
