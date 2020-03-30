@@ -29,8 +29,6 @@ USER root
 
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
-RUN mkdir /gcs && chown -R $NB_USER /gcs
-RUN mkdir /opt/app
 
 # Add NB_USER to sudo
 RUN echo "$NB_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/notebook
@@ -39,7 +37,6 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 # Configure container startup
 USER $NB_USER
 EXPOSE 8888
-ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV NB_PREFIX /
 
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
