@@ -27,24 +27,6 @@ USER $NB_USER
 
 USER root
 
-# Install Google Cloud SDK
-RUN apt-get update \
-    && yes | apt-get install gnupg \
-    && echo "deb http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && apt-get update \
-    && yes | apt-get install google-cloud-sdk
-
-# Install gcsFUSE
-RUN apt-get update \
-    && apt-get install  -yq lsb \
-    && export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` \
-    && echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list \
-    && apt-get install gnupg \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && apt-get update \
-    && apt-get install gcsfuse 
-
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
 RUN mkdir /gcs && chown -R $NB_USER /gcs
