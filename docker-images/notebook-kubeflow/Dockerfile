@@ -53,7 +53,7 @@ RUN pip install pipenv \
                 --upgrade --no-cache-dir \
                 --upgrade-strategy only-if-needed
 
-RUN pip install kubeflow-kale
+RUN pip install kubeflow-kale==0.4.0
 
 RUN jupyter labextension install jupyter-leaflet \
                                  @jupyterlab/git \
@@ -61,7 +61,6 @@ RUN jupyter labextension install jupyter-leaflet \
                                  @lckr/jupyterlab_variableinspector \
                                  @jupyterlab/toc \
                                  @ryantam626/jupyterlab_code_formatter \
-                                 dask-labextension \
                                  plotlywidget@1.5.2 \
                                  jupyterlab-plotly@1.5.2 \
                                  jupyterlab-dash \
@@ -73,7 +72,7 @@ RUN jupyter labextension install jupyter-leaflet \
                                  jupyterlab-topbar-text \
                                  jupyterlab-theme-toggle
 
-RUN jupyter labextension install kubeflow-kale-launcher
+RUN jupyter labextension install kubeflow-kale-launcher@1.4.0
 
 RUN jupyter serverextension enable --py nbserverproxy \
                                         jupyterlab \
@@ -118,7 +117,7 @@ RUN sed -ri "s#Defaults\s+secure_path=\"([^\"]+)\"#Defaults secure_path=\"\1:$CO
 # Configure container startup
 USER $NB_USER
 EXPOSE 8888
-ENV DASK_CONFIG=/home/$NB_USER/config.yaml
 ENV NB_PREFIX /
 
 ENTRYPOINT ["tini", "--", "/usr/bin/prepare.sh"]
+CMD ["jupyter", "lab", "--notebook-dir=/home/jovyan", "--ip=0.0.0.0", "--no-browser" ,"--allow-root", "--port=8888", "--NotebookApp.token=''", "--NotebookApp.password=''", "--NotebookApp.allow_origin='*'", "--NotebookApp.base_url=$NB_PREFIX", "--VoilaConfiguration.template=gridstack" ,"--VoilaConfiguration.resources='{"gridstack": {"show_handles": True}}'"]
