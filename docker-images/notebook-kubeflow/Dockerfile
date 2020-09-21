@@ -61,9 +61,7 @@ RUN jupyter labextension install --debug \
                                  @jupyterlab/git \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
-                                 @jupyterlab/toc \
                                  @ryantam626/jupyterlab_code_formatter \
-                                 dask-labextension \
                                  plotlywidget@1.5.2 \
                                  jupyterlab-plotly@1.5.2 \
                                  jupyterlab-dash \
