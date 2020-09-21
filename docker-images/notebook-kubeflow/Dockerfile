@@ -39,9 +39,7 @@ RUN conda install --yes \
     voila \
     black \
     pymysql \
-    jupyterlab_code_formatter \
-    ptvsd \
-    xeus-python notebook \
+    jupyterlab_code_formatter 
     && conda clean --all -f -y
 
 RUN pip install --upgrade pip
@@ -65,7 +63,6 @@ RUN jupyter labextension install --debug \
                                  plotlywidget@1.5.2 \
                                  jupyterlab-plotly@1.5.2 \
                                  jupyterlab-dash \
-                                 @jupyterlab/debugger \
                                  @techrah/text-shortcuts \
                                  @telamonian/theme-darcula \
                                  @karosc/jupyterlab_dracula \
@@ -95,16 +92,6 @@ RUN apt-get update \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
     && apt-get update \
     && yes | apt-get install google-cloud-sdk
-
-# Install gcsFUSE
-RUN apt-get update \
-    && apt-get install  -yq lsb \
-    && export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` \
-    && echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list \
-    && apt-get install gnupg \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
-    && apt-get update \
-    && apt-get install gcsfuse 
 
 COPY prepare.sh /usr/bin/prepare.sh
 RUN chmod +x /usr/bin/prepare.sh
