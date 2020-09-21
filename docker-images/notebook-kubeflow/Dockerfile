@@ -39,7 +39,7 @@ RUN conda install --yes \
     voila \
     black \
     pymysql \
-    jupyterlab_code_formatter 
+    jupyterlab_code_formatter \
     && conda clean --all -f -y
 
 RUN pip install --upgrade pip
