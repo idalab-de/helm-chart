@@ -47,7 +47,7 @@ RUN pip install --upgrade pip
 # Install kfp SDK with known working version 
 RUN pip install pipenv \
                 nbserverproxy \
-                jupyterlab-git \
+                jupyterlab-git==0.11.0 \
                 kfp==0.1.40 \
                 kfp-server-api==0.1.18.3 \ 
                 --upgrade --no-cache-dir \
@@ -56,7 +56,7 @@ RUN pip install pipenv \
 RUN pip install kubeflow-kale
 
 RUN jupyter labextension install --debug \
-                                 @jupyterlab/git \
+                                 @jupyterlab/git@0.11.0 \
                                  @jupyter-voila/jupyterlab-preview \
                                  @lckr/jupyterlab_variableinspector \
                                  @ryantam626/jupyterlab_code_formatter \
