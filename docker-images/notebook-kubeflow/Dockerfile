@@ -10,6 +10,8 @@ RUN apt-get update && \
     nano \
     git-extras \
     zsh \
+    zip \
+    unzip \
     less \
     vim \
     man \
